@@ -32,5 +32,26 @@ public class OrdenAnalisis {
     @OneToMany(mappedBy = "ordenAnalisis")
     private List<AsignacionLaboratorio> asignaciones;
 
-    // Getters y setters
+    public OrdenAnalisis() {}
+
+    public Long getIdOrdenAnalisis() { return idOrdenAnalisis; }
+    public void setIdOrdenAnalisis(Long idOrdenAnalisis) { this.idOrdenAnalisis = idOrdenAnalisis; }
+
+    public Paciente getPaciente() { return paciente; }
+    public void setPaciente(Paciente paciente) { this.paciente = paciente; }
+
+    public LocalDateTime getFechaSolicitud() { return fechaSolicitud; }
+    public void setFechaSolicitud(LocalDateTime fechaSolicitud) { this.fechaSolicitud = fechaSolicitud; }
+
+    public String getEstado() { return estado; }
+    public void setEstado(String estado) { this.estado = estado; }
+
+    public String getMedicoSolicitante() { return medicoSolicitante; }
+    public void setMedicoSolicitante(String medicoSolicitante) { this.medicoSolicitante = medicoSolicitante; }
+
+    public String getObservaciones() { return observaciones; }
+    public void setObservaciones(String observaciones) { this.observaciones = observaciones; }
+
+    public List<AsignacionLaboratorio> getAsignaciones() { return asignaciones; }
+    public void setAsignaciones(List<AsignacionLaboratorio> asignaciones) { this.asignaciones = asignaciones; }
 }

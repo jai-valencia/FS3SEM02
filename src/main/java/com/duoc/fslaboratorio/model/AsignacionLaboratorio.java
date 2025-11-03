@@ -1,7 +1,7 @@
 package com.duoc.fslaboratorio.model;
+
 import jakarta.persistence.*;
 import java.time.LocalDateTime;
-import java.util.List;
 
 @Entity
 @Table(name = "ASIGNACIONES_LABORATORIO")
@@ -24,17 +24,35 @@ public class AsignacionLaboratorio {
     @JoinColumn(name = "ID_TIPO_ANALISIS", nullable = false)
     private TipoAnalisis tipoAnalisis;
 
-    @Column(name = "FECHA_ASIGNACION")
+    @Column(name = "FECHA_ASIGNACION", nullable = false)
     private LocalDateTime fechaAsignacion;
 
-    @Column(name = "ESTADO", length = 20)
+    @Column(name = "ESTADO", length = 20, nullable = false)
     private String estado;
 
-    @Column(name = "PRIORIDAD", length = 10)
+    @Column(name = "PRIORIDAD", length = 10, nullable = false)
     private String prioridad;
 
-    @OneToMany(mappedBy = "asignacion")
-    private List<ResultadoAnalisis> resultados;
+    public AsignacionLaboratorio() {}
 
-    // Getters y setters
+    public Long getIdAsignacion() { return idAsignacion; }
+    public void setIdAsignacion(Long idAsignacion) { this.idAsignacion = idAsignacion; }
+
+    public OrdenAnalisis getOrdenAnalisis() { return ordenAnalisis; }
+    public void setOrdenAnalisis(OrdenAnalisis ordenAnalisis) { this.ordenAnalisis = ordenAnalisis; }
+
+    public Laboratorio getLaboratorio() { return laboratorio; }
+    public void setLaboratorio(Laboratorio laboratorio) { this.laboratorio = laboratorio; }
+
+    public TipoAnalisis getTipoAnalisis() { return tipoAnalisis; }
+    public void setTipoAnalisis(TipoAnalisis tipoAnalisis) { this.tipoAnalisis = tipoAnalisis; }
+
+    public LocalDateTime getFechaAsignacion() { return fechaAsignacion; }
+    public void setFechaAsignacion(LocalDateTime fechaAsignacion) { this.fechaAsignacion = fechaAsignacion; }
+
+    public String getEstado() { return estado; }
+    public void setEstado(String estado) { this.estado = estado; }
+
+    public String getPrioridad() { return prioridad; }
+    public void setPrioridad(String prioridad) { this.prioridad = prioridad; }
 }
