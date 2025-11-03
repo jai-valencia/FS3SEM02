@@ -1,10 +1,13 @@
 package com.duoc.fslaboratorio.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 import java.util.List;
 
 @Entity
 @Table(name = "LABORATORIOS")
+@JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
 public class Laboratorio {
 
     @Id
@@ -27,7 +30,8 @@ public class Laboratorio {
     @Column(name = "ESTADO", length = 20)
     private String estado;
 
-    @OneToMany(mappedBy = "laboratorio")
+    @OneToMany(mappedBy = "laboratorio", fetch = FetchType.LAZY)
+    @JsonIgnore // 👈 evita ciclo y respuestas gigantes
     private List<AsignacionLaboratorio> asignaciones;
 
     public Laboratorio() {}

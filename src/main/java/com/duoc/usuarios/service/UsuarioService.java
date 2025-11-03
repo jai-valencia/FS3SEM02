@@ -17,6 +17,7 @@ import org.springframework.stereotype.Service;
 import java.time.LocalDateTime;
 import java.util.Set;
 import java.util.stream.Collectors;
+import java.util.List;
 
 @Service
 @Transactional
@@ -101,5 +102,12 @@ public class UsuarioService {
             r.setRoles(u.getRoles().stream().map(Rol::getNombreRol).collect(Collectors.toSet()));
         }
         return r;
+    }
+
+    public List<UsuarioResponse> listarTodos() {
+    return usuarioRepo.findAll()
+            .stream()
+            .map(this::toResponse)
+            .toList();
     }
 }

@@ -1,59 +1,64 @@
-
+// com/duoc/usuarios/controller/UsuarioController.java
 package com.duoc.usuarios.controller;
 
-import com.duoc.usuarios.dto.*;
-import com.duoc.usuarios.security.JwtService;
+import com.duoc.usuarios.dto.UsuarioCreateDTO;
+import com.duoc.usuarios.dto.UsuarioUpdateDTO;
+import com.duoc.usuarios.dto.UsuarioResponse;
+import com.duoc.usuarios.dto.LoginRequest;
 import com.duoc.usuarios.service.UsuarioService;
 import jakarta.validation.Valid;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.Map;
+import java.net.URI;
+import java.util.List;
 
 @RestController
-@RequestMapping
+@RequestMapping("/api/usuarios")
 public class UsuarioController {
 
-    private final UsuarioService usuarioService;
-    private final JwtService jwtService;
+    private final UsuarioService service;
 
-    public UsuarioController(UsuarioService usuarioService, JwtService jwtService) {
-        this.usuarioService = usuarioService;
-        this.jwtService = jwtService;
+    public UsuarioController(UsuarioService service) {
+        this.service = service;
     }
 
-    // ---------- AUTH ----------
-    @PostMapping("/auth/login")
-    public ResponseEntity<LoginResponse> login(@Valid @RequestBody LoginRequest req){
-        // valida credenciales
-        usuarioService.login(req);
-        String token = jwtService.generateToken(
-                req.getEmail(),
-                Map.of("scope","USER"),  // puedes incluir roles
-                1000L * 60 * 60          // 1 hora
-        );
-        return ResponseEntity.ok(new LoginResponse(token));
-    }
-
-    // ---------- CRUD USUARIOS ----------
-    @PostMapping("/api/usuarios")
+    // POST /api/usuarios  (crear)
+    @PostMapping
     public ResponseEntity<UsuarioResponse> crear(@Valid @RequestBody UsuarioCreateDTO dto){
-        return ResponseEntity.ok(usuarioService.crear(dto));
+        UsuarioResponse r = service.crear(dto);
+        return ResponseEntity.created(URI.create("/api/usuarios/" + r.getId())).body(r);
     }
 
-    @PutMapping("/api/usuarios/{id}")
-    public ResponseEntity<UsuarioResponse> actualizar(@PathVariable Long id, @Valid @RequestBody UsuarioUpdateDTO dto){
-        return ResponseEntity.ok(usuarioService.actualizar(id, dto));
+    // ✅ GET /api/usuarios  (listar)  <-- necesario para evitar 405 en tu prueba
+    @GetMapping
+    public ResponseEntity<List<UsuarioResponse>> listar(){
+        return ResponseEntity.ok(service.listarTodos());
     }
 
-    @DeleteMapping("/api/usuarios/{id}")
+    // ✅ GET /api/usuarios/{id}
+    @GetMapping("/{id}")
+    public ResponseEntity<UsuarioResponse> porId(@PathVariable Long id){
+        return ResponseEntity.ok(service.buscarPorId(id));
+    }
+
+    // PUT /api/usuarios/{id}
+    @PutMapping("/{id}")
+    public ResponseEntity<UsuarioResponse> actualizar(@PathVariable Long id,
+                                                      @Valid @RequestBody UsuarioUpdateDTO dto){
+        return ResponseEntity.ok(service.actualizar(id, dto));
+    }
+
+    // DELETE /api/usuarios/{id}
+    @DeleteMapping("/{id}")
     public ResponseEntity<Void> eliminar(@PathVariable Long id){
-        usuarioService.eliminar(id);
+        service.eliminar(id);
         return ResponseEntity.noContent().build();
     }
 
-    @GetMapping("/api/usuarios/{id}")
-    public ResponseEntity<UsuarioResponse> buscarPorId(@PathVariable Long id){
-        return ResponseEntity.ok(usuarioService.buscarPorId(id));
+    // POST /api/usuarios/login
+    @PostMapping("/login")
+    public ResponseEntity<String> login(@RequestBody LoginRequest req){
+        return ResponseEntity.ok(service.login(req));
     }
 }

@@ -11,6 +11,7 @@ import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Service
 @Transactional
@@ -75,5 +76,44 @@ public class OrdenAsignacionService {
         // si finaliza, podrías marcar la orden COMPLETADA si todas sus asignaciones finalizaron
         return a; // JPA hace flush al terminar la transacción
     }
+
+    public List<OrdenAnalisis> listarTodas() {
+        return ordenRepo.findAll();
+    }
+
+    public OrdenAnalisis obtenerPorId(Long id) {
+        return ordenRepo.findById(id)
+                .orElseThrow(() -> new EntityNotFoundException("Orden no encontrada"));
+    }
+
+    public List<OrdenAnalisis> listarPorEstado(String estado) {
+        return ordenRepo.findByEstadoIgnoreCase(estado);
+    }
+
+    public List<OrdenAnalisis> listarPorRutPaciente(String rutPaciente) {
+        return ordenRepo.findByPaciente_Rut(rutPaciente);
+    }
+
+    public OrdenAnalisis actualizarOrden(Long id, String medicoSolicitante, String observaciones) {
+        OrdenAnalisis oa = obtenerPorId(id);
+        if (medicoSolicitante != null) oa.setMedicoSolicitante(medicoSolicitante);
+        if (observaciones != null) oa.setObservaciones(observaciones);
+        return oa; // JPA flush al final
+    }
+
+    public OrdenAnalisis cambiarEstadoOrden(Long id, String nuevoEstado) {
+        OrdenAnalisis oa = obtenerPorId(id);
+        oa.setEstado(nuevoEstado);
+        return oa;
+    }
+
+    public void eliminarOrden(Long id) {
+        if (!ordenRepo.existsById(id)) throw new EntityNotFoundException("Orden no encontrada");
+        ordenRepo.deleteById(id);
+    }
+  
+
+
+    
 }
 

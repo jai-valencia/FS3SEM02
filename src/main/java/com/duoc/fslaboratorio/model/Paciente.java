@@ -1,5 +1,6 @@
 package com.duoc.fslaboratorio.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import java.time.LocalDate;
 import java.util.List;
@@ -34,8 +35,36 @@ public class Paciente {
     @Column(name = "EMAIL", length = 120)
     private String email;
 
-    @OneToMany(mappedBy = "paciente")
+    @OneToMany(mappedBy = "paciente", fetch = FetchType.LAZY)
+    @JsonIgnore // evita ciclo y respuesta gigante
     private List<OrdenAnalisis> ordenes;
 
-    // Getters y setters
+    public Paciente() {}
+
+    public Long getIdPaciente() { return idPaciente; }
+    public void setIdPaciente(Long idPaciente) { this.idPaciente = idPaciente; }
+
+    public String getNombres() { return nombres; }
+    public void setNombres(String nombres) { this.nombres = nombres; }
+
+    public String getApellidos() { return apellidos; }
+    public void setApellidos(String apellidos) { this.apellidos = apellidos; }
+
+    public String getRut() { return rut; }
+    public void setRut(String rut) { this.rut = rut; }
+
+    public LocalDate getFechaNacimiento() { return fechaNacimiento; }
+    public void setFechaNacimiento(LocalDate fechaNacimiento) { this.fechaNacimiento = fechaNacimiento; }
+
+    public String getSexo() { return sexo; }
+    public void setSexo(String sexo) { this.sexo = sexo; }
+
+    public String getTelefono() { return telefono; }
+    public void setTelefono(String telefono) { this.telefono = telefono; }
+
+    public String getEmail() { return email; }
+    public void setEmail(String email) { this.email = email; }
+
+    public List<OrdenAnalisis> getOrdenes() { return ordenes; }
+    public void setOrdenes(List<OrdenAnalisis> ordenes) { this.ordenes = ordenes; }
 }

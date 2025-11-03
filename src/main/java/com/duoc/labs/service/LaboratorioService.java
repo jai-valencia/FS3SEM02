@@ -7,6 +7,8 @@ import jakarta.persistence.EntityNotFoundException;
 import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service
 @Transactional
 public class LaboratorioService {
@@ -29,5 +31,9 @@ public class LaboratorioService {
 
     public Laboratorio obtener(Long id){
         return labRepo.findById(id).orElseThrow(() -> new EntityNotFoundException("Laboratorio no encontrado"));
+    }
+
+    public List<Laboratorio> listarTodos(){
+    return labRepo.findAll();
     }
 }

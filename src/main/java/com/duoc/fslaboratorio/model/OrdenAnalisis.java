@@ -1,5 +1,7 @@
 package com.duoc.fslaboratorio.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import java.time.LocalDateTime;
 import java.util.List;
@@ -13,8 +15,10 @@ public class OrdenAnalisis {
     @Column(name = "ID_ORDEN_ANALISIS")
     private Long idOrdenAnalisis;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "ID_PACIENTE", nullable = false)
+    // Evita problemas de proxies LAZY y evita serializar la colección ordenes del paciente (para no ciclar)
+    @JsonIgnoreProperties({"hibernateLazyInitializer", "handler", "ordenes"})
     private Paciente paciente;
 
     @Column(name = "FECHA_SOLICITUD", nullable = false)
@@ -29,7 +33,8 @@ public class OrdenAnalisis {
     @Column(name = "OBSERVACIONES", length = 400)
     private String observaciones;
 
-    @OneToMany(mappedBy = "ordenAnalisis")
+    @OneToMany(mappedBy = "ordenAnalisis", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
+    @JsonManagedReference(value = "orden-asignaciones")
     private List<AsignacionLaboratorio> asignaciones;
 
     public OrdenAnalisis() {}

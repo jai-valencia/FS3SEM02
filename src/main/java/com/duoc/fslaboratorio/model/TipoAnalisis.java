@@ -1,9 +1,13 @@
 package com.duoc.fslaboratorio.model;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 import java.util.List;
 
 @Entity
 @Table(name = "TIPOS_ANALISIS")
+@JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
 public class TipoAnalisis {
 
     @Id
@@ -23,9 +27,27 @@ public class TipoAnalisis {
     @Column(name = "RANGO_REFERENCIA", length = 80)
     private String rangoReferencia;
 
-    @OneToMany(mappedBy = "tipoAnalisis")
+    @OneToMany(mappedBy = "tipoAnalisis", fetch = FetchType.LAZY)
+    @JsonIgnore // 👈 evita ciclo y respuestas gigantes
     private List<AsignacionLaboratorio> asignaciones;
 
-    // Getters y setters
-}
+    public TipoAnalisis() {}
 
+    public Long getIdTipoAnalisis() { return idTipoAnalisis; }
+    public void setIdTipoAnalisis(Long idTipoAnalisis) { this.idTipoAnalisis = idTipoAnalisis; }
+
+    public String getNombre() { return nombre; }
+    public void setNombre(String nombre) { this.nombre = nombre; }
+
+    public String getCodigo() { return codigo; }
+    public void setCodigo(String codigo) { this.codigo = codigo; }
+
+    public String getUnidadMedida() { return unidadMedida; }
+    public void setUnidadMedida(String unidadMedida) { this.unidadMedida = unidadMedida; }
+
+    public String getRangoReferencia() { return rangoReferencia; }
+    public void setRangoReferencia(String rangoReferencia) { this.rangoReferencia = rangoReferencia; }
+
+    public List<AsignacionLaboratorio> getAsignaciones() { return asignaciones; }
+    public void setAsignaciones(List<AsignacionLaboratorio> asignaciones) { this.asignaciones = asignaciones; }
+}

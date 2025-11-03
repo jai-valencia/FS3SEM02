@@ -1,5 +1,7 @@
 package com.duoc.fslaboratorio.model;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 import java.time.LocalDateTime;
 
@@ -12,16 +14,19 @@ public class AsignacionLaboratorio {
     @Column(name = "ID_ASIGNACION")
     private Long idAsignacion;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "ID_ORDEN_ANALISIS", nullable = false)
+    @JsonBackReference(value = "orden-asignaciones")
     private OrdenAnalisis ordenAnalisis;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "ID_LABORATORIO", nullable = false)
+    @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
     private Laboratorio laboratorio;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "ID_TIPO_ANALISIS", nullable = false)
+    @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
     private TipoAnalisis tipoAnalisis;
 
     @Column(name = "FECHA_ASIGNACION", nullable = false)
